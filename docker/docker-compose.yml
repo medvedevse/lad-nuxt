@@ -1,0 +1,11 @@
+name: "lad-nuxt"
+services:
+  postgres:
+    container_name: lad-nuxt
+    image: postgres:16-alpine3.19
+    environment:
+      POSTGRES_DB: "lad-nuxt"
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "root"
+    ports:
+      - "5432:5432"
