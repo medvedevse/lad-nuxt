@@ -1,21 +1,21 @@
 <template>
 	<div class="wrapper">
-		<div class="controls-wrapper">
-			<h1>Admin page</h1>
+		<!-- <div class="controls-wrapper">
 			<div>
 				<button
-					class="logout-btn"
-					@click="logoutUser"
+					class="back-btn"
+					@click="router.back()"
 				>
-					Logout
+					Back
 				</button>
 			</div>
-		</div>
-		<pre>{{ form }}</pre>
+		</div> -->
+		<h1>Login page</h1>
+		<pre>{{ session }}</pre>
 		<div class="form-wrapper">
 			<form
 				class="form"
-				@submit.prevent="createUser"
+				@submit.prevent="loginUser"
 			>
 				<div>
 					<input
@@ -34,21 +34,13 @@
 					/>
 				</div>
 				<div class="btn-container">
-					<div class="admin-checkbox">
-						<label for="admin">Admin</label>
-						<input
-							type="checkbox"
-							v-model="form.isAdmin"
-							id="admin"
-						/>
-					</div>
-					<button type="submit">Create user</button>
+					<button type="submit">Sign in</button>
 				</div>
 				<div
 					class="alert"
 					v-if="isError"
 				>
-					Пользователь существует!
+					Неверный логин или пароль!
 				</div>
 			</form>
 		</div>
@@ -57,37 +49,44 @@
 
 <script setup lang="ts">
 import type { NuxtError } from '#app';
+import type { IUser } from '~/middleware/admin';
 
 definePageMeta({
-	layout: 'admin',
-	middleware: ['admin'],
+	layout: 'login',
+	middleware: [
+		async (to, from) => {
+			const { user } = useUserSession();
+			if (user.value && (user.value as IUser).isAdmin) {
+				return await navigateTo('/admin');
+			} else if (user.value && !(user.value as IUser).isAdmin) {
+				return await navigateTo('/');
+			}
+		},
+	],
 });
 
-const { clear } = useUserSession();
+const { session, clear } = useUserSession();
+
+const router = useRouter();
 
 const form = reactive({
 	username: '',
 	password: '',
-	isAdmin: false,
 });
 
 const isError = ref<boolean>(false);
 
-const createUser = async () => {
+const loginUser = async () => {
 	try {
-		const { data, status, error } = await useFetch('/api/user', {
+		const { data, status, error } = await useFetch('/api/auth', {
 			method: 'POST',
 			body: { ...form },
 		});
 		if (error.value) isError.value = true;
+		if (status.value === 'success') location.reload();
 	} catch (err) {
 		console.error((err as NuxtError).message);
 	}
-};
-
-const logoutUser = async () => {
-	await clear();
-	await location.reload();
 };
 </script>
 
@@ -117,7 +116,7 @@ const logoutUser = async () => {
 	.btn-container {
 		display: flex;
 		gap: 10px;
-		justify-content: space-between;
+		justify-content: flex-start;
 		button {
 			border: 1px solid gray;
 			padding: 2px 4px;
@@ -138,14 +137,15 @@ const logoutUser = async () => {
 	text-align: center;
 }
 
-.admin-checkbox {
-	display: flex;
-	gap: 4px;
-	align-items: center;
-}
-
 .controls-wrapper {
 	display: flex;
 	justify-content: space-between;
+}
+
+.logout-btn,
+.back-btn {
+	border: 1px solid gray;
+	padding: 2px 4px;
+	cursor: pointer;
 }
 </style>

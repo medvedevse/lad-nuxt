@@ -6,8 +6,14 @@
 					<li>
 						<NuxtLink to="/">Main</NuxtLink>
 					</li>
-					<li v-if="loggedIn">
+					<li>
+						<NuxtLink to="/posts">Posts</NuxtLink>
+					</li>
+					<li>
 						<NuxtLink to="/account">Account</NuxtLink>
+					</li>
+					<li>
+						<NuxtLink to="/admin/statistic">Statistic</NuxtLink>
 					</li>
 				</ul>
 			</nav>
@@ -19,9 +25,7 @@
 	</div>
 </template>
 
-<script setup lang="ts">
-const { loggedIn } = useUserSession();
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss" scoped>
 .wrapper {
