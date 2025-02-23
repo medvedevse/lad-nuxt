@@ -1,17 +1,6 @@
 <template>
 	<div class="wrapper">
-		<!-- <div class="controls-wrapper">
-			<div>
-				<button
-					class="back-btn"
-					@click="router.back()"
-				>
-					Back
-				</button>
-			</div>
-		</div> -->
 		<h1>Login page</h1>
-		<pre>{{ session }}</pre>
 		<div class="form-wrapper">
 			<form
 				class="form"
@@ -102,6 +91,7 @@ const loginUser = async () => {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	min-height: 50vh;
 }
 
 .form {

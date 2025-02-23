@@ -13,6 +13,9 @@
 						<NuxtLink to="/account">Account</NuxtLink>
 					</li>
 					<li>
+						<NuxtLink to="/admin/video">Video</NuxtLink>
+					</li>
+					<li>
 						<NuxtLink to="/admin/statistic">Statistic</NuxtLink>
 					</li>
 				</ul>
